@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ShopifyAI Pro">
+<meta name="theme-color" content="#04050d">
+<title>ShopifyAI Pro — RM CAT PAWS</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─── */
+:root{
+  --bg:#04050d;--c1:#080916;--c2:#0c0d1c;--c3:#101124;
+  --b1:#14152c;--b2:#1e1f3c;--b3:#2a2b52;
+  --g:#00f0a8;--gd:#00f0a80c;--gm:#00f0a835;
+  --gold:#ffc947;--goldd:#ffc9470c;
+  --sky:#3dc0ff;--skyd:#3dc0ff0c;
+  --rose:#ff4c78;--rosed:#ff4c780c;
+  --violet:#b06eff;--violetd:#b06eff0c;
+  --orange:#ff8e38;
+  --tx:#edf0ff;--sub:#6868a0;--dim:#252548;
+  --f:'Outfit',sans-serif;--m:'JetBrains Mono',monospace;
+}
+/* ─── RESET ─── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font-family:var(--f);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+input,textarea,button{font-family:var(--f)}
+input,textarea{width:100%;background:var(--c1);border:1px solid var(--b2);border-radius:10px;padding:12px 14px;color:var(--tx);font-size:13px;font-family:var(--m);outline:none;box-sizing:border-box}
+input:focus,textarea:focus{border-color:var(--gm)}
+input::placeholder,textarea::placeholder{color:var(--dim)}
+textarea{resize:vertical}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.2)}}
+
+/* ─── SETUP SCREEN ─── */
+#setup{
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  padding:28px 16px 60px;
+  background:radial-gradient(ellipse at 15% 20%,#00f0a814,transparent 50%),
+             radial-gradient(ellipse at 85% 80%,#3dc0ff0a,transparent 50%),var(--bg);
+}
+.cx{width:100%;max-width:470px;animation:up .5s ease}
+.logo{text-align:center;margin-bottom:26px}
+.logo .cat{font-size:56px;display:block;margin-bottom:12px}
+.logo h1{font-size:28px;font-weight:900;letter-spacing:-1px}
+.logo h1 b{color:var(--g)}
+.logo p{color:var(--sub);font-size:12px;margin-top:5px;font-family:var(--m)}
+.card{background:var(--c2);border:1px solid var(--b2);border-radius:16px;padding:18px;margin-bottom:12px}
+.lbl{display:block;color:var(--dim);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-family:var(--m)}
+.mb{margin-bottom:13px}
+.box{border-radius:10px;padding:12px;margin-bottom:14px;font-size:11px;line-height:1.85;font-family:var(--m)}
+.box b{color:var(--tx)}
+.bsky{background:var(--skyd);border:1px solid #3dc0ff28;color:var(--sky)}
+.bgreen{background:var(--gd);border:1px solid var(--gm);color:var(--g)}
+.bgold{background:var(--goldd);border:1px solid #ffc94728;color:var(--gold)}
+.brose{background:var(--rosed);border:1px solid #ff4c7828;color:var(--rose);display:none}
+.bok{background:var(--gd);border:1px solid var(--gm);color:var(--g);display:none}
+
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:10px;font-weight:800;cursor:pointer;transition:all .15s;font-family:var(--f);letter-spacing:.3px}
+.full{width:100%}
+.blg{padding:14px 20px;font-size:15px}
+.bmd{padding:11px 18px;font-size:13px}
+.bsm{padding:7px 13px;font-size:11px;border-radius:8px}
+.bg{background:var(--g);color:#000}.bg:disabled{background:var(--dim);color:#555;cursor:not-allowed}
+.bgold-btn{background:var(--gold);color:#000}
+.bsky-btn{background:var(--sky);color:#000}
+.brose-btn{background:var(--rose);color:#000}
+.bviolet-btn{background:var(--violet);color:#000}
+.bo{background:transparent;border:1.5px solid}
+.bog{border-color:var(--g);color:var(--g)}
+.bogold{border-color:var(--gold);color:var(--gold)}
+.bored{border-color:var(--rose);color:var(--rose)}
+.sp{width:13px;height:13px;border-radius:50%;border:2.5px solid #00000028;border-top:2.5px solid currentColor;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
+.spw{border-color:#fff2;border-top-color:#fff}
+
+/* ─── DASHBOARD ─── */
+#dash{display:none;padding-bottom:85px}
+#hdr{position:sticky;top:0;z-index:100;background:rgba(4,5,13,.97);backdrop-filter:blur(22px);border-bottom:1px solid var(--b2);padding:10px 14px}
+.hrow{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.hname{font-size:15px;font-weight:800}
+.hmeta{color:var(--dim);font-size:10px;margin-top:1px;font-family:var(--m)}
+.hright{display:flex;gap:6px;align-items:center}
+.bdg{padding:3px 8px;border-radius:5px;font-size:10px;font-weight:700;font-family:var(--m)}
+.bdg-g{background:var(--gd);border:1px solid var(--gm);color:var(--g)}
+.bdg-s{background:var(--skyd);border:1px solid #3dc0ff28;color:var(--sky)}
+.dsc{background:none;border:1px solid var(--b2);color:var(--sub);border-radius:6px;padding:4px 9px;font-size:10px;cursor:pointer;font-family:var(--m)}
+#main{max-width:720px;margin:0 auto;padding:14px 13px}
+
+/* ─── STATS ─── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--c2);border:1px solid var(--b2);border-radius:12px;padding:11px 6px;text-align:center}
+.sv{font-size:22px;font-weight:900}
+.sl{color:var(--dim);font-size:10px;margin-top:2px;font-family:var(--m)}
+
+/* ─── BULK BANNER ─── */
+.bulk{background:linear-gradient(135deg,var(--gd),var(--skyd));border:1px solid var(--gm);border-radius:16px;padding:16px;margin-bottom:14px}
+.bt{font-size:15px;font-weight:800;margin-bottom:3px}
+.bsub{color:var(--sub);font-size:12px;margin-bottom:14px;font-family:var(--m)}
+.pw{display:none;margin-bottom:12px}
+.pl{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;font-family:var(--m)}
+.pl span{color:var(--sub)}.pl strong{color:var(--g)}
+.pt{background:var(--b2);border-radius:99px;height:7px;overflow:hidden}
+.pb{background:linear-gradient(90deg,var(--g),var(--sky));height:100%;border-radius:99px;width:0%;transition:width .3s}
+.bact{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ─── TABS ─── */
+.tbar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+.tbtn{background:var(--c2);border:1px solid var(--b2);color:var(--sub);border-radius:8px;padding:7px 12px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;font-family:var(--f);transition:all .1s}
+.tbtn.on{background:var(--g);border-color:var(--g);color:#000}
+.tp{display:none}.tp.on{display:block;animation:up .25s ease}
+
+/* ─── SECTION ─── */
+.sec{background:var(--c2);border:1px solid var(--b2);border-radius:16px;padding:16px;margin-bottom:12px}
+.st{font-size:15px;font-weight:800;margin-bottom:3px}
+.ss{color:var(--sub);font-size:12px;margin-bottom:14px;font-family:var(--m)}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
+.chip{padding:7px 12px;border-radius:8px;font-size:11px;font-weight:800;cursor:pointer;border:1px solid var(--b2);background:var(--c2);color:var(--sub);font-family:var(--f);transition:all .1s}
+.cg{background:var(--g)!important;border-color:var(--g)!important;color:#000!important}
+.cgold{background:var(--gold)!important;border-color:var(--gold)!important;color:#000!important}
+.csky{background:var(--sky)!important;border-color:var(--sky)!important;color:#000!important}
+.cviolet{background:var(--violet)!important;border-color:var(--violet)!important;color:#000!important}
+.crose{background:var(--rose)!important;border-color:var(--rose)!important;color:#000!important}
+
+/* ─── PRODUCT CARD ─── */
+.pc{background:var(--c2);border:1px solid var(--b2);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.pc.open{border-color:var(--b3)}
+.pch{display:flex;gap:10px;padding:12px;align-items:center;cursor:pointer;user-select:none}
+.pimg{width:48px;height:48px;border-radius:8px;object-fit:cover;flex-shrink:0;background:var(--b2)}
+.pno{color:var(--dim);font-size:10px;min-width:22px;text-align:center;flex-shrink:0;font-family:var(--m)}
+.pinf{flex:1;min-width:0}
+.ptit{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px}
+.ptgs{display:flex;gap:4px;flex-wrap:wrap}
+.ptag{padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap;font-family:var(--m)}
+.ptr{background:var(--rosed);border:1px solid #ff4c7828;color:var(--rose)}
+.ptgd{background:var(--goldd);border:1px solid #ffc94728;color:var(--gold)}
+.pts{background:var(--skyd);border:1px solid #3dc0ff28;color:var(--sky)}
+.ptgr{background:var(--gd);border:1px solid var(--gm);color:var(--g)}
+.ptm{background:#1a1b3015;border:1px solid var(--b2);color:var(--dim)}
+.sring{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:900}
+.pchev{color:var(--dim);font-size:13px;margin-left:4px;flex-shrink:0}
+.pbody{padding:0 12px 14px;border-top:1px solid var(--b2);display:none}
+
+/* ─── FIELD ─── */
+.cf{margin-bottom:10px}
+.cfh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.cfl{color:var(--sub);font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;font-family:var(--m)}
+.cfc{background:transparent;border:1px solid var(--b2);color:var(--dim);border-radius:6px;padding:3px 10px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--m);transition:all .1s}
+.cfc.done{border-color:var(--g);color:var(--g);background:var(--gd)}
+.cfv{background:var(--c1);border:1px solid var(--b2);border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.75;white-space:pre-wrap;max-height:170px;overflow-y:auto;color:var(--tx);font-family:var(--m)}
+.cfvg{border-color:var(--gm)!important;background:var(--gd)!important}
+.cfvgold{border-color:#ffc94728!important;background:var(--goldd)!important}
+.cfvsky{border-color:#3dc0ff28!important;background:var(--skyd)!important}
+
+/* ─── RESULT BOX ─── */
+.rbox{background:var(--c1);border-radius:12px;padding:14px;margin-top:12px;animation:up .3s ease}
+.rbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.rbdg{padding:3px 9px;border-radius:5px;font-size:10px;font-weight:700;letter-spacing:.5px;font-family:var(--m)}
+.rbt{font-size:12px;line-height:1.9;white-space:pre-wrap;max-height:440px;overflow-y:auto;color:#d5d5f8;font-family:var(--m)}
+
+/* ─── LOADER ─── */
+.ld{text-align:center;padding:26px 0}
+.ldd{display:inline-flex;gap:5px;margin-bottom:10px}
+.ldot{width:7px;height:7px;border-radius:50%;background:var(--g);animation:pulse 1s ease var(--d,0s) infinite}
+.ldt{color:var(--sub);font-size:12px;font-family:var(--m)}
+
+/* ─── APPLY BOX ─── */
+.abox{background:var(--gd);border:1px solid var(--gm);border-radius:10px;padding:11px 13px;margin-bottom:13px}
+.at{color:var(--g);font-weight:800;font-size:13px;margin-bottom:3px}
+.as{color:var(--sub);font-size:11px;font-family:var(--m)}
+
+/* ─── HEALTH BAR ─── */
+.hbar{margin-bottom:14px}
+.hbt{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px;font-family:var(--m)}
+.hbt span{color:var(--sub)}.hbt strong{color:var(--g)}
+.hbg{background:var(--b2);border-radius:99px;height:6px;overflow:hidden}
+.hbf{background:linear-gradient(90deg,var(--g),var(--sky));height:100%;border-radius:99px}
+
+/* ─── BOTTOM NAV ─── */
+#bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(4,5,13,.98);backdrop-filter:blur(22px);border-top:1px solid var(--b2);display:flex;justify-content:space-around;padding:8px 0 max(10px,env(safe-area-inset-bottom));z-index:99}
+.nb{background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:2px 8px;cursor:pointer}
+.nbi{font-size:20px;line-height:1;transition:filter .2s}
+.nbl{font-size:9px;font-weight:800;color:var(--dim);letter-spacing:.3px;font-family:var(--f);transition:color .2s}
+.nb.on .nbl{color:var(--g)}.nb:not(.on) .nbi{filter:grayscale(1) opacity(.3)}
+.nbd{width:3px;height:3px;border-radius:50%;background:var(--g);margin-top:1px}
+.slbl{display:block;color:var(--dim);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;font-family:var(--m)}
+</style>
+</head>
+<body>
+
+<!-- ══════════ SETUP SCREEN ══════════ -->
+<div id="setup">
+<div class="cx">
+  <div class="logo">
+    <span class="cat">🐱</span>
+    <h1>Shopify<b>AI</b> Pro</h1>
+    <p>Complete auto-manager — RM CAT PAWS</p>
+  </div>
+
+  <div class="card">
+    <!-- AI KEY -->
+    <div class="box bsky">
+      <b>🤖 Step 1 — Get FREE Gemini AI Key (1 min, no payment):</b><br>
+      1. Go to <b>aistudio.google.com</b> on your phone<br>
+      2. Sign in with Google (free)<br>
+      3. Tap <b>"Get API key"</b> → <b>"Create API key"</b><br>
+      4. Copy the key that starts with <b>AIza...</b>
+    </div>
+    <span class="lbl mb" style="display:block">🤖 Gemini AI Key (FREE)</span>
+    <input id="inp-ai" type="password" placeholder="AIzaSy..." class="mb">
+
+    <!-- SHOPIFY TOKEN -->
+    <div class="box bgold">
+      <b>🏪 Step 2 — Shopify Token:</b><br>
+      Admin → Apps → Headless → Rm Cat Paws Headless<br>
+      Scroll down → copy <b>Public access token</b><br>
+      Make sure Products ✅ Collections ✅ are turned ON
+    </div>
+    <span class="lbl mb" style="display:block">🏪 Store Domain</span>
+    <input id="inp-store" value="rmcatpaws.myshopify.com" class="mb">
+    <span class="lbl mb" style="display:block">🔒 Shopify Public Access Token</span>
+    <input id="inp-tok" type="password" placeholder="fa1df3fcc8dd..." class="mb">
+
+    <div class="box brose" id="err-box"><span id="err-txt"></span></div>
+    <div class="box bok" id="ok-box"><span id="ok-txt"></span></div>
+
+    <button class="btn bg full blg" id="cbtn" onclick="doConnect()">
+      <span>⚡</span><span>Connect & Auto-Scan My Store</span>
+    </button>
+  </div>
+
+  <div class="card" style="background:var(--c1)">
+    <div style="color:var(--gold);font-weight:800;font-size:13px;margin-bottom:8px">⚠️ If connection fails — Fix permissions</div>
+    <div style="color:var(--sub);font-size:12px;line-height:1.85;font-family:var(--m)">
+      Shopify Admin → Apps → Headless → Rm Cat Paws Headless<br>
+      → Edit Storefront API permissions → turn ON:<br>
+      <b style="color:var(--tx)">✅ Products &nbsp; ✅ Product listings &nbsp; ✅ Collections</b><br>
+      → Save → Try connecting again
+    </div>
+  </div>
+
+  <p style="text-align:center;color:var(--dim);font-size:11px;font-family:var(--m);margin-top:8px">
+    🔒 Keys saved on your device — never sent anywhere else
+  </p>
+</div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="dash">
+  <div id="hdr">
+    <div class="hrow">
+      <div>
+        <div class="hname">🐱 <span id="hname">RM CAT PAWS</span></div>
+        <div class="hmeta" id="hmeta">Loading store...</div>
+      </div>
+      <div class="hright">
+        <span class="bdg bdg-g">LIVE</span>
+        <span class="bdg bdg-s">AI PRO</span>
+        <button class="dsc" onclick="doReset()">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="main">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat"><div class="sv" id="sv-p" style="color:var(--sky)">—</div><div class="sl">Products</div></div>
+      <div class="stat"><div class="sv" id="sv-s">—</div><div class="sl">Avg Score</div></div>
+      <div class="stat"><div class="sv" id="sv-c" style="color:var(--rose)">—</div><div class="sl">Critical</div></div>
+      <div class="stat"><div class="sv" id="sv-g" style="color:var(--g)">—</div><div class="sl">Healthy</div></div>
+    </div>
+
+    <!-- Bulk Fix Engine -->
+    <div class="bulk">
+      <div class="bt">⚡ AI Auto-Fix Engine</div>
+      <div class="bsub" id="bsub">Fix all critical products simultaneously — 3 at a time</div>
+      <div class="pw" id="pw">
+        <div class="pl"><span id="plbl">Fixing...</span><strong id="ppct">0%</strong></div>
+        <div class="pt"><div class="pb" id="pbar"></div></div>
+      </div>
+      <div class="bact">
+        <button class="btn bg bmd" id="fabtn" onclick="fixAll()">🚀 Auto-Fix ALL Critical Products</button>
+        <button class="btn bo bogold bsm" id="cabtn" style="display:none" onclick="copyAllFixes()">📋 Copy All Fixes</button>
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tbar">
+      <button class="tbtn on" onclick="goTab('audit',this)">🔍 Audit</button>
+      <button class="tbtn" onclick="goTab('content',this)">✍️ Content</button>
+      <button class="tbtn" onclick="goTab('seo',this)">📈 SEO</button>
+      <button class="tbtn" onclick="goTab('support',this)">💬 Support</button>
+      <button class="tbtn" onclick="goTab('ads',this)">📣 Ads</button>
+      <button class="tbtn" onclick="goTab('email',this)">📧 Email</button>
+      <button class="tbtn" onclick="goTab('social',this)">📱 Social</button>
+      <button class="tbtn" onclick="goTab('insights',this)">💰 Insights</button>
+      <button class="tbtn" onclick="goTab('pricing',this)">💲 Pricing</button>
+      <button class="tbtn" onclick="goTab('settings',this)">⚙️ Settings</button>
+    </div>
+
+    <!-- Tab Panels -->
+    <div id="tp-audit" class="tp on"></div>
+    <div id="tp-content" class="tp"></div>
+    <div id="tp-seo" class="tp"></div>
+    <div id="tp-support" class="tp"></div>
+    <div id="tp-ads" class="tp"></div>
+    <div id="tp-email" class="tp"></div>
+    <div id="tp-social" class="tp"></div>
+    <div id="tp-insights" class="tp"></div>
+    <div id="tp-pricing" class="tp"></div>
+    <div id="tp-settings" class="tp"></div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div id="bnav">
+    <button class="nb on" onclick="goNav('audit',this)"><span class="nbi">🔍</span><span class="nbl">Audit</span><span class="nbd"></span></button>
+    <button class="nb" onclick="goNav('content',this)"><span class="nbi">✍️</span><span class="nbl">Content</span></button>
+    <button class="nb" onclick="goNav('support',this)"><span class="nbi">💬</span><span class="nbl">Support</span></button>
+    <button class="nb" onclick="goNav('ads',this)"><span class="nbi">📣</span><span class="nbl">Ads</span></button>
+    <button class="nb" onclick="goNav('insights',this)"><span class="nbi">💰</span><span class="nbl">Insights</span></button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+var S={aiKey:'',store:'',tok:'',products:[],collections:[],shop:{name:'RM CAT PAWS'},fixes:{},tab:'audit'};
+
+// ══════════════════════════════════════════════
+// SAVE / LOAD (user enters keys once, saved forever)
+// ══════════════════════════════════════════════
+function saveKeys(){try{localStorage.setItem('s_ai',S.aiKey);localStorage.setItem('s_st',S.store);localStorage.setItem('s_tk',S.tok);}catch(e){}}
+function loadKeys(){
+  try{
+    var ai=localStorage.getItem('s_ai'),st=localStorage.getItem('s_st'),tk=localStorage.getItem('s_tk');
+    if(ai)document.getElementById('inp-ai').value=ai;
+    if(st)document.getElementById('inp-store').value=st||'rmcatpaws.myshopify.com';
+    if(tk)document.getElementById('inp-tok').value=tk;
+  }catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// GEMINI AI — Free, calls Google directly from browser
+// Free tier: 15 req/min, 1M tokens/day — no payment
+// ══════════════════════════════════════════════
+async function ai(sys,user){
+  var url='https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+S.aiKey;
+  var r=await fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      system_instruction:{parts:[{text:sys}]},
+      contents:[{role:'user',parts:[{text:user}]}],
+      generationConfig:{maxOutputTokens:1500,temperature:0.7}
+    })
+  });
+  var d=await r.json();
+  if(d.error)throw new Error(d.error.message||'Gemini API error. Check your key at aistudio.google.com');
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'No response';
+}
+
+// ══════════════════════════════════════════════
+// SHOPIFY — calls /api/shopify (Vercel serverless)
+// This fixes CORS completely — server to server call
+// ══════════════════════════════════════════════
+var GQL='{ products(first:250){edges{node{ id title description handle productType vendor tags seo{title description} images(first:5){edges{node{url altText}}} variants(first:10){edges{node{title price{amount currencyCode} compareAtPrice{amount} availableForSale}}} collections(first:5){edges{node{title handle}}} priceRange{minVariantPrice{amount currencyCode}} }}} collections(first:50){edges{node{ id title handle description seo{title description} image{url altText} products(first:3){edges{node{title}}} }}} shop{name primaryDomain{url} currencyCode} }';
+
+async function shopify(){
+  var r=await fetch('/api/shopify',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({store:S.store,token:S.tok,query:GQL})
+  });
+  if(!r.ok){
+    var err=await r.json();
+    throw new Error(err.error||'Shopify connection failed. Status: '+r.status);
+  }
+  return r.json();
+}
+
+// ══════════════════════════════════════════════
+// SYSTEM PROMPT
+// ══════════════════════════════════════════════
+function SYS(){
+  return 'You are the AI manager for "'+S.shop.name+'" — a Shopify print-on-demand store selling cat-themed apparel & home goods (t-shirts, hoodies, sweatshirts, pillows, blankets) via Printify. Tone: friendly, fun, professional. Cat lovers worldwide. Never reveal AI. Printify handles all fulfillment (3-7 day production + 5-10 day shipping). Returns for defective items only. Always write SEO-optimized, conversion-focused content for Shopify Dawn theme.';
+}
+
+// ══════════════════════════════════════════════
+// PRODUCT AUDIT ENGINE
+// ══════════════════════════════════════════════
+function auditP(p){
+  var iss=[],seo=p.seo||{},desc=p.description||'',imgs=p.images?.edges||[],vars=p.variants?.edges||[];
+  var hc=vars.some(v=>v.node.compareAtPrice&&parseFloat(v.node.compareAtPrice.amount)>0);
+  var add=(t,s,l,f)=>iss.push({type:t,sev:s,label:l,fix:f});
+  if(!seo.title||seo.title.length<10) add('st','critical','No SEO title','Add keyword-rich title ≤60 chars');
+  else if(seo.title.length>60) add('stl','warn','SEO title too long ('+seo.title.length+'/60)','Shorten to 60 chars');
+  if(!seo.description||seo.description.length<20) add('sd','critical','No meta description','Add 155-char description');
+  else if(seo.description.length>155) add('sdl','warn','Meta desc too long ('+seo.description.length+'/155)','Trim to 155 chars');
+  if(!desc||desc.length<80) add('d','critical','No product description','Write 200+ words');
+  else if(desc.length<200) add('ds','warn','Description too short','Expand to 200+ words');
+  var na=imgs.filter(e=>!e.node.altText?.trim());
+  if(na.length) add('a','warn',na.length+' images missing ALT','Add ALT text to all images');
+  if(!p.productType) add('pt','warn','No product type set','Set product type');
+  if(!p.tags?.length) add('tg','info','No tags added','Add 10+ keyword tags');
+  if(!hc) add('cp','info','No compare-at price','Add for sale badge');
+  if(vars.some(v=>!v.node.availableForSale)) add('oos','warn','Some variants out of stock','Update via Printify');
+  if(!p.collections?.edges?.length) add('co','warn','Not in any collection','Add to collections');
+  var score=Math.max(0,100-iss.filter(i=>i.sev==='critical').length*22-iss.filter(i=>i.sev==='warn').length*9-iss.filter(i=>i.sev==='info').length*4);
+  return{issues:iss,score};
+}
+
+// ══════════════════════════════════════════════
+// CONNECT
+// ══════════════════════════════════════════════
+function showErr(m){var el=document.getElementById('err-box');document.getElementById('err-txt').textContent=m;el.style.display='block';}
+function showOk(m){var el=document.getElementById('ok-box');document.getElementById('ok-txt').textContent=m;el.style.display='block';}
+function hideMsg(){document.getElementById('err-box').style.display='none';document.getElementById('ok-box').style.display='none';}
+
+async function doConnect(){
+  var aiKey=document.getElementById('inp-ai').value.trim();
+  var store=document.getElementById('inp-store').value.trim();
+  var tok=document.getElementById('inp-tok').value.trim();
+  hideMsg();
+  if(!aiKey)return showErr('❌ Enter your free Gemini AI key from aistudio.google.com');
+  if(!aiKey.startsWith('AIza'))return showErr('❌ Gemini key must start with AIza... — get it free from aistudio.google.com');
+  if(!tok)return showErr('❌ Enter your Shopify Public Access Token from Headless channel');
+  S.aiKey=aiKey;S.store=store;S.tok=tok;
+  var btn=document.getElementById('cbtn');
+  btn.innerHTML='<span class="spw sp"></span><span>Scanning all products...</span>';btn.disabled=true;
+  showOk('⏳ Connecting to your store via Vercel...');
+  try{
+    var data=await shopify();
+    if(data.errors)throw new Error(data.errors[0].message);
+    if(!data.data?.shop)throw new Error('Could not read store. Go to Headless channel → enable Products + Collections in Storefront API permissions.');
+    S.products=(data.data.products.edges||[]).map(e=>e.node);
+    S.collections=(data.data.collections.edges||[]).map(e=>e.node);
+    S.shop=data.data.shop;
+    saveKeys();hideMsg();launch();
+  }catch(e){
+    hideMsg();showErr('❌ '+e.message);
+  }
+  btn.innerHTML='<span>⚡</span><span>Connect & Auto-Scan My Store</span>';btn.disabled=false;
+}
+
+function doReset(){if(!confirm('Disconnect store?'))return;S.products=[];S.collections=[];S.shop={name:'RM CAT PAWS'};S.fixes={};document.getElementById('setup').style.display='flex';document.getElementById('dash').style.display='none';}
+
+// ══════════════════════════════════════════════
+// LAUNCH DASHBOARD
+// ══════════════════════════════════════════════
+function launch(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('dash').style.display='block';
+  refreshStats();
+  buildAudit();buildContent();buildSEO();buildSupport();
+  buildAds();buildEmail();buildSocial();buildInsights();buildPricing();buildSettings();
+}
+
+function refreshStats(){
+  var aud=S.products.map(auditP);
+  var avg=Math.round(aud.reduce((s,a)=>s+a.score,0)/(aud.length||1));
+  var crit=S.products.filter((_,i)=>aud[i].issues.some(x=>x.sev==='critical')).length;
+  var good=S.products.filter((_,i)=>aud[i].score>=80).length;
+  document.getElementById('hname').textContent=S.shop.name;
+  document.getElementById('hmeta').textContent=S.products.length+' products · Score '+avg+'/100 · '+crit+' critical · '+good+' healthy';
+  document.getElementById('sv-p').textContent=S.products.length;
+  var sv=document.getElementById('sv-s');sv.textContent=avg+'%';sv.style.color=avg>=70?'var(--g)':'var(--gold)';
+  document.getElementById('sv-c').textContent=crit;
+  document.getElementById('sv-g').textContent=good;
+  document.getElementById('bsub').textContent='Fix '+crit+' critical products — 3 at a time simultaneously';
+}
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+var _e=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+var _uid=()=>'x'+Math.random().toString(36).slice(2,8);
+var _tp=()=>S.products.slice(0,5).map(p=>p.title).join(', ');
+
+function ldHTML(m){return '<div class="ld"><div class="ldd"><div class="ldot" style="--d:0s"></div><div class="ldot" style="--d:.18s"></div><div class="ldot" style="--d:.36s"></div><div class="ldot" style="--d:.54s"></div></div><div class="ldt">'+m+'</div></div>';}
+function rHTML(text,label,color){var id=_uid();return '<div class="rbox" style="border:1px solid '+color+'44"><div class="rbh"><span class="rbdg" style="background:'+color+'18;border:1px solid '+color+'44;color:'+color+'">'+label+'</span><button class="cfc" onclick="cpR(\''+id+'\')">COPY ALL</button></div><div class="rbt" id="'+id+'">'+_e(text)+'</div></div>';}
+function cpR(id){var el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.textContent).catch(()=>{});var b=el.closest('.rbox')?.querySelector('.cfc');if(b){b.textContent='✓ COPIED';b.classList.add('done');setTimeout(()=>{b.textContent='COPY ALL';b.classList.remove('done');},2000);}}
+function cpF(btn,id){var el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.textContent).catch(()=>{});btn.textContent='✓ COPIED';btn.classList.add('done');setTimeout(()=>{btn.textContent='COPY';btn.classList.remove('done');},2000);}
+
+// ══════════════════════════════════════════════
+// FIX PROMPT + PARSER
+// ══════════════════════════════════════════════
+function fixP(p){
+  var pr=p.priceRange?.minVariantPrice;
+  return 'Generate ALL missing Shopify content for this cat apparel product:\nPRODUCT: '+p.title+'\nTYPE: '+(p.productType||'cat apparel')+'\nCURRENT DESC: '+(p.description?.slice(0,200)||'EMPTY')+'\nCURRENT SEO TITLE: '+(p.seo?.title||'EMPTY')+'\nCURRENT META DESC: '+(p.seo?.description||'EMPTY')+'\nTAGS: '+(p.tags?.join(', ')||'NONE')+'\nPRICE: '+(pr?pr.currencyCode+' '+pr.amount:'?')+'\nIMAGES: '+(p.images?.edges?.length||0)+'\n\nReply in this EXACT format:\n---SEO_TITLE---\n[50-60 chars keyword+emotion+product]\n---META_DESC---\n[140-155 chars benefit-focused ends with period]\n---PRODUCT_TITLE---\n[60-80 chars compelling keyword-rich]\n---SHORT_DESC---\n[2 sentences for Dawn theme header]\n---BULLETS---\n✨ [design detail]\n🐱 [cat lover appeal]\n🎁 [gift angle]\n👕 [print quality]\n💌 [unique value]\n---FULL_DESC---\n[220 word description: hook, 3 paragraphs, gift CTA]\n---ALT_TEXT---\n[80-120 chars keyword-rich alt text]\n---TAGS---\n[15 comma-separated tags]\n---SLUG---\n[clean-seo-url-handle]\n---COMPARE_TIP---\n[Set compare-at to $X to show $Y savings badge]';
+}
+
+function parseF(t){
+  var g=k=>{var m=t.match(new RegExp('---'+k+'---\\s*([\\s\\S]*?)(?=---|$)','i'));return m?m[1].trim():'';};
+  return{seoTitle:g('SEO_TITLE'),metaDesc:g('META_DESC'),productTitle:g('PRODUCT_TITLE'),shortDesc:g('SHORT_DESC'),bullets:g('BULLETS'),fullDesc:g('FULL_DESC'),altText:g('ALT_TEXT'),tags:g('TAGS'),slug:g('SLUG'),compareTip:g('COMPARE_TIP')};
+}
+
+// ══════════════════════════════════════════════
+// FIX ALL PRODUCTS
+// ══════════════════════════════════════════════
+async function fixAll(){
+  var aud=S.products.map(auditP);
+  var targets=S.products.filter((_,i)=>aud[i].issues.some(x=>x.sev==='critical'));
+  if(!targets.length){alert('🎉 No critical issues! All products are healthy.');return;}
+  var btn=document.getElementById('fabtn'),pw=document.getElementById('pw');
+  btn.innerHTML='<span class="spw sp"></span> Fixing '+targets.length+' products...';btn.disabled=true;pw.style.display='block';
+  var done=0,total=targets.length,B=3;
+  for(var i=0;i<targets.length;i+=B){
+    await Promise.all(targets.slice(i,i+B).map(async p=>{
+      try{var t=await ai(SYS(),fixP(p));S.fixes[p.id]=parseF(t);}catch(e){}
+      done++;var pct=Math.round(done/total*100);
+      document.getElementById('pbar').style.width=pct+'%';
+      document.getElementById('ppct').textContent=pct+'%';
+      document.getElementById('plbl').textContent='Fixed '+done+' of '+total;
+    }));
+  }
+  btn.innerHTML='✅ '+done+' Products Fixed!';btn.disabled=false;
+  document.getElementById('cabtn').style.display='inline-flex';
+  buildAudit();
+}
+
+function copyAllFixes(){
+  var all=Object.entries(S.fixes).map(([id,f])=>{var p=S.products.find(x=>x.id===id);return '=== '+(p?.title||id)+' ===\nSEO: '+f.seoTitle+'\nMeta: '+f.metaDesc+'\nTitle: '+f.productTitle+'\nDesc: '+f.fullDesc+'\nTags: '+f.tags+'\nSlug: '+f.slug+'\n';}).join('\n');
+  navigator.clipboard.writeText(all).catch(()=>{});
+  alert('✅ All '+Object.keys(S.fixes).length+' fixes copied!');
+}
+
+// ══════════════════════════════════════════════
+// PRODUCT CARD HTML
+// ══════════════════════════════════════════════
+function pcHTML(p,a,idx){
+  var img=p.images?.edges?.[0]?.node;
+  var sc=a.score,scC=sc>=80?'var(--g)':sc>=55?'var(--gold)':'var(--rose)';
+  var fix=S.fixes[p.id];
+  var tags=a.issues.slice(0,2).map(i=>'<span class="ptag '+(i.sev==='critical'?'ptr':i.sev==='warn'?'ptgd':'pts')+'">'+_e(i.label)+'</span>').join('');
+  if(a.issues.length>2)tags+='<span class="ptag ptm">+'+(a.issues.length-2)+'</span>';
+  if(fix)tags+='<span class="ptag ptgr">FIXED ✓</span>';
+  var pid='p_'+p.id.replace(/[^a-z0-9]/gi,'_');
+  return '<div class="pc" id="'+pid+'"><div class="pch" onclick="tPC(\''+pid+'\')"><span class="pno">#'+(idx+1)+'</span>'+(img?'<img class="pimg" src="'+_e(img.url)+'" alt="" loading="lazy">':`<div class="pimg"></div>`)+'<div class="pinf"><div class="ptit">'+_e(p.title)+'</div><div class="ptgs">'+tags+'</div></div><div class="sring" style="border:2.5px solid '+scC+';background:'+scC+'18;color:'+scC+';font-family:var(--f)">'+sc+'</div><span class="pchev" id="ch_'+pid+'">▼</span></div><div class="pbody" id="pb_'+pid+'"><div style="margin:12px 0"><div style="color:var(--dim);font-size:10px;font-weight:700;letter-spacing:1px;font-family:var(--m);text-transform:uppercase;margin-bottom:6px">Issues ('+a.issues.length+')</div>'+a.issues.map(iss=>'<div style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--b2)"><span style="width:7px;height:7px;border-radius:50%;background:'+(iss.sev==='critical'?'var(--rose)':iss.sev==='warn'?'var(--gold)':'var(--sky)')+';display:inline-block;flex-shrink:0;margin-top:5px"></span><div style="flex:1"><div style="font-size:12px">'+_e(iss.label)+'</div><div style="color:var(--dim);font-size:11px;font-family:var(--m)">→ '+_e(iss.fix)+'</div></div><span class="ptag '+(iss.sev==='critical'?'ptr':iss.sev==='warn'?'ptgd':'pts')+'">'+iss.sev.toUpperCase()+'</span></div>').join('')+'</div>'+(fix?fixHTML(p,fix):'<button class="btn bg full bmd" id="fb_'+pid+'" onclick="fixOne(\''+pid+'\',\''+p.id+'\')">⚡ AI Fix All '+a.issues.length+' Issues</button>')+'</div></div>';
+}
+
+function fixHTML(p,fix){
+  var pid='p_'+p.id.replace(/[^a-z0-9]/gi,'_');
+  var fs=[{l:'Product Title → name field',v:fix.productTitle,c:'cfvgold'},{l:'SEO Title → Search engine listing section',v:fix.seoTitle,c:'cfvg'},{l:'Meta Description → Search engine listing section',v:fix.metaDesc,c:'cfvg'},{l:'Short Description → Dawn theme header',v:fix.shortDesc,c:'cfvsky'},{l:'Bullet Points → add to description',v:fix.bullets,c:'cfvsky'},{l:'Full Product Description',v:fix.fullDesc,c:'cfvgold'},{l:'Image ALT Text → click each image → Edit alt text',v:fix.altText,c:'cfvg'},{l:'Tags → Tags field',v:fix.tags,c:''},{l:'URL Handle → URL and handle section',v:fix.slug,c:''},{l:'Compare-at Price Tip',v:fix.compareTip,c:''}];
+  return '<div class="abox"><div class="at">✅ Copy each field → paste in Shopify Admin → Products → Edit → Save</div><div class="as">SEO fields: scroll to "Search engine listing" section at bottom of product page</div></div>'+fs.filter(f=>f.v).map(f=>{var id=_uid();return '<div class="cf"><div class="cfh"><span class="cfl">'+f.l+'</span><button class="cfc" onclick="cpF(this,\''+id+'\')">COPY</button></div><div class="cfv '+f.c+'" id="'+id+'">'+_e(f.v)+'</div></div>';}).join('')+'<div style="margin-top:10px"><button class="btn bo bogold bsm" onclick="fixOne(\''+pid+'\',\''+p.id+'\')">🔄 Regenerate</button></div>';
+}
+
+function tPC(pid){var b=document.getElementById('pb_'+pid),c=document.getElementById('ch_'+pid);if(!b)return;if(b.style.display==='none'||!b.style.display){b.style.display='block';if(c)c.textContent='▲';}else{b.style.display='none';if(c)c.textContent='▼';}}
+
+async function fixOne(pid,id){
+  var p=S.products.find(x=>x.id===id);if(!p)return;
+  var fb=document.getElementById('fb_'+pid);if(fb){fb.innerHTML='<span class="spw sp"></span> AI writing...';fb.disabled=true;}
+  try{var t=await ai(SYS(),fixP(p));S.fixes[id]=parseF(t);var pb=document.getElementById('pb_'+pid);if(pb)pb.innerHTML='<div style="height:12px"></div>'+fixHTML(p,S.fixes[id]);var pc=document.getElementById(pid);if(pc){var tgs=pc.querySelector('.ptgs');if(tgs&&!tgs.innerHTML.includes('FIXED'))tgs.innerHTML+='<span class="ptag ptgr">FIXED ✓</span>';}}catch(e){if(fb){fb.innerHTML='⚡ AI Fix All Issues';fb.disabled=false;}}
+}
+
+// ══════════════════════════════════════════════
+// BUILD AUDIT TAB
+// ══════════════════════════════════════════════
+function buildAudit(){
+  var aud=S.products.map(auditP);
+  var good=S.products.filter((_,i)=>aud[i].score>=80).length;
+  var pct=Math.round(good/(S.products.length||1)*100);
+  var crit=S.products.filter((_,i)=>aud[i].issues.some(x=>x.sev==='critical'));
+  var warn=S.products.filter((_,i)=>aud[i].issues.some(x=>x.sev==='warn')&&!aud[i].issues.some(x=>x.sev==='critical'));
+  var goodP=S.products.filter((_,i)=>aud[i].score>=80);
+  var h='<div class="hbar"><div class="hbt"><span>Store health — '+good+' of '+S.products.length+' optimized</span><strong>'+pct+'%</strong></div><div class="hbg"><div class="hbf" style="width:'+pct+'%"></div></div></div>';
+  if(crit.length){h+='<div style="color:var(--rose);font-size:11px;font-weight:700;margin-bottom:8px;letter-spacing:1px;font-family:var(--m)">🔴 CRITICAL — FIX FIRST ('+crit.length+')</div>';crit.forEach(p=>h+=pcHTML(p,aud[S.products.indexOf(p)],S.products.indexOf(p)));}
+  if(warn.length){h+='<div style="color:var(--gold);font-size:11px;font-weight:700;margin:12px 0 8px;letter-spacing:1px;font-family:var(--m)">🟡 WARNINGS ('+warn.length+')</div>';warn.forEach(p=>h+=pcHTML(p,aud[S.products.indexOf(p)],S.products.indexOf(p)));}
+  if(goodP.length){h+='<div style="color:var(--g);font-size:11px;font-weight:700;margin:12px 0 8px;letter-spacing:1px;font-family:var(--m)">✅ HEALTHY ('+goodP.length+')</div>';goodP.forEach(p=>h+=pcHTML(p,aud[S.products.indexOf(p)],S.products.indexOf(p)));}
+  document.getElementById('tp-audit').innerHTML=h||'<div style="text-align:center;padding:32px;color:var(--dim)">No products found.</div>';
+}
+
+// ══════════════════════════════════════════════
+// GENERIC TOOL BUILDER
+// ══════════════════════════════════════════════
+var _modes={},_cfgs={};
+function buildTool(id,cfg){
+  _modes[id]=cfg.modes[0].id;_cfgs[id]=cfg;
+  var chips=cfg.modes.map((m,i)=>'<div class="chip'+(i===0?' '+cfg.cls:'')+'" onclick="pickM(\''+id+'\',this,\''+m.id+'\',\''+cfg.cls+'\')">'+m.label+'</div>').join('');
+  var inps=(cfg.inputs||[]).map(inp=>'<span class="slbl">'+inp.lbl+'</span>'+(inp.multi?'<textarea rows="2"':'<input')+' id="'+id+'_'+inp.id+'" placeholder="'+_e(inp.ph)+'" style="margin-bottom:12px">'+(inp.multi?'</textarea>':'')).join('');
+  document.getElementById('tp-'+id).innerHTML='<div class="sec"><div class="st">'+cfg.title+'</div><div class="ss">'+cfg.sub+'</div><div class="chips" id="mc_'+id+'">'+chips+'</div>'+inps+'<button class="btn full bmd" style="background:'+cfg.col+';color:#000;border:none;cursor:pointer;font-weight:800;font-family:var(--f)" id="tb_'+id+'" onclick="runT(\''+id+'\')">'+cfg.bl+'</button></div><div id="tr_'+id+'"></div>';
+}
+function pickM(id,el,mode,cls){document.querySelectorAll('#mc_'+id+' .chip').forEach(c=>c.className='chip');el.className='chip '+cls;_modes[id]=mode;document.getElementById('tr_'+id).innerHTML='';}
+async function runT(id){
+  var cfg=_cfgs[id],mode=_modes[id];
+  var btn=document.getElementById('tb_'+id),res=document.getElementById('tr_'+id);
+  var inp={};(cfg.inputs||[]).forEach(i=>{var el=document.getElementById(id+'_'+i.id);inp[i.id]=el?el.value:'';});
+  btn.innerHTML='<span class="spw sp"></span> Generating...';btn.disabled=true;
+  res.innerHTML=ldHTML('AI generating content...');
+  try{var r=await ai(SYS(),cfg.prompts[mode](inp,_tp(),S.shop.name));res.innerHTML=rHTML(r,cfg.rl,cfg.col);}
+  catch(e){res.innerHTML=rHTML('Error: '+e.message,'ERROR','var(--rose)');}
+  btn.innerHTML=cfg.bl;btn.disabled=false;
+}
+
+// ══════════════════════════════════════════════
+// ALL AI TOOLS
+// ══════════════════════════════════════════════
+function buildContent(){buildTool('content',{title:'✍️ Content Generator',sub:'Homepage, collections, blog, FAQ, popups, cart recovery, about page',col:'var(--gold)',cls:'cgold',bl:'✍️ Generate Content',rl:'CONTENT READY',modes:[{id:'hp',label:'Homepage'},{id:'col',label:'Collection'},{id:'blog',label:'Blog Post'},{id:'faq',label:'FAQ & Policy'},{id:'popup',label:'Popups'},{id:'abandon',label:'Cart Recovery'},{id:'about',label:'About Page'}],inputs:[{id:'a',lbl:'Topic / Name (optional)',ph:'e.g. Black Cat Collection, best gifts...',multi:false},{id:'b',lbl:'Extra context',ph:'e.g. Summer sale, new designs just added...',multi:true}],prompts:{hp:(inp,tp,n)=>'Write complete Shopify Dawn homepage copy for cat apparel store "'+n+'". Products: '+tp+'. Context: '+inp.b+'\n\n🏠 HERO HEADLINE (8 words emotional):\n💬 HERO SUBHEADLINE (20 words):\n🛒 HERO CTA BUTTON:\n🔥 ANNOUNCEMENT BAR:\n🏷️ 3 ANNOUNCEMENT MESSAGES:\n🐾 4 TRUST BADGES:\n⭐ COLLECTION HEADLINE + SUBTEXT:\n💌 EMAIL POPUP + OFFER:\n🔚 FOOTER TAGLINE:\n📋 SEO TITLE + META DESC:',col:(inp,tp,n)=>'Collection page for "'+n+'". Collection: '+(inp.a||'Cat Hoodies')+'. Products: '+tp+'.\n📌 SEO TITLE (60 chars):\n📝 META DESC (155 chars):\n🏷️ TAGLINE:\n📖 DESCRIPTION (120 words):\n📣 CTA BUTTON:\n🌐 URL HANDLE:',blog:(inp,tp,n)=>'SEO blog post for "'+n+'". Topic: '+(inp.a||'Best Gifts for Cat Lovers 2026')+'. Mention: '+tp+'.\n📰 HEADLINE:\n🎯 META DESC:\n📖 INTRO (100 words):\n[H2] Section 1 (120 words):\n[H2] Section 2 (120 words):\n[H2] Section 3 (100 words):\n📣 CONCLUSION + CTA:',faq:(inp,tp,n)=>'FAQ + policy for Printify cat apparel store "'+n+'".\n10 FAQs WITH ANSWERS\n📦 SHIPPING POLICY (3 paragraphs)\n🔄 RETURN POLICY (Printify-compliant)\n📏 SIZE GUIDE INTRO\n🎁 GIFT GUIDE BLURB',popup:(inp,tp,n)=>'Popup copy for "'+n+'".\n💌 EMAIL SIGNUP (headline+body+CTA+10% offer)\n🔥 EXIT-INTENT POPUP\n🎉 WELCOME BACK\n⏰ FLASH SALE POPUP\n📱 MOBILE STICKY BAR\n🎁 FREE SHIPPING BAR',abandon:(inp,tp,n)=>'Cart abandonment for "'+n+'". Products: '+tp+'.\n📧 EMAIL 1 (1hr): Subject+body\n📧 EMAIL 2 (24hr+discount): Subject+body\n📧 EMAIL 3 (72hr): Subject+body\n📱 SMS (160 chars):\n🔔 BROWSER PUSH:',about:(inp,tp,n)=>'About page for "'+n+'".\n📖 BRAND STORY (200 words):\n🐱 WHO WE ARE:\n💌 OUR PROMISE:\n🎁 WHY CAT LOVERS LOVE US:\n📦 HOW IT WORKS:\n📣 CTA:'}});}
+
+function buildSEO(){buildTool('seo',{title:'📈 SEO Auto-Generator',sub:'Perfect SEO for every product, collection, page, and image',col:'var(--g)',cls:'cg',bl:'🔍 Generate SEO',rl:'SEO READY',modes:[{id:'prod',label:'Product'},{id:'coll',label:'Collection'},{id:'audit',label:'Full Audit'},{id:'alt',label:'ALT Text'},{id:'blog',label:'Blog Ideas'},{id:'schema',label:'Schema'}],inputs:[{id:'name',lbl:'Product / Page Name',ph:'e.g. Sleeping Cat Unisex Hoodie',multi:false},{id:'kw',lbl:'Target Keywords',ph:'e.g. cat lover gift, funny cat hoodie, cat mom shirt',multi:false}],prompts:{prod:(inp,tp,n)=>'Complete SEO for product:\nProduct: '+(inp.name||'Cat Hoodie')+'\nKeywords: '+(inp.kw||'cat lover gift')+'\n\n📌 SEO TITLE (60 chars):\n📝 META DESC (155 chars):\n🔑 URL HANDLE:\n🏷️ IMAGE ALT TEXT:\n🎯 FOCUS KEYWORD:\n📊 8 SECONDARY KEYWORDS:',coll:(inp,tp,n)=>'Collection SEO for "'+(inp.name||'Cat Hoodies')+'". Keywords: '+inp.kw+'\n📌 SEO TITLE:\n📝 META DESC:\n🔑 URL HANDLE:\n📖 DESCRIPTION (120 words):',audit:(inp,tp,n)=>'SEO audit for "'+n+'". Products: '+tp+'\n🔴 CRITICAL:\n🟡 WARNINGS:\n🟢 WORKING:\n💡 TOP 5 QUICK WINS:\n🎯 30-DAY ROADMAP:',alt:(inp,tp,n)=>'8 ALT text variations for "'+(inp.name||'cat hoodie')+'".\n3 product on white:\n2 lifestyle:\n2 detail:\n1 collection banner:\nEach 80-120 chars keyword-rich',blog:(inp,tp,n)=>'10 SEO blog ideas for "'+n+'". Keywords: '+(inp.kw||'cat lover gifts')+'\nFor each:\n📰 TITLE:\n🎯 KEYWORD:\n📊 SEARCH VOLUME:\n💰 BUYER INTENT (1-10):',schema:(inp,tp,n)=>'Schema guide for Shopify Dawn cat store:\n1. PRODUCT SCHEMA + steps\n2. BREADCRUMB SCHEMA\n3. ORGANIZATION SCHEMA\n4. REVIEW SCHEMA (stars in Google)\n5. FAQ SCHEMA\n6. HOW TO ADD TO DAWN'}});}
+
+function buildSupport(){
+  var q=['Where is my order?','I got the wrong item','My item is damaged','I want a return','How long does shipping take?','What sizes do you have?','Do you ship internationally?','I want to cancel'];
+  document.getElementById('tp-support').innerHTML='<div class="sec"><div class="st">💬 AI Customer Support</div><div class="ss">Instant replies — Printify policies, never reveals AI</div><span class="slbl">Customer Message</span><textarea id="sup-msg" rows="4" placeholder="Paste customer message here..." style="margin-bottom:10px"></textarea><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px">'+q.map(qn=>'<button onclick="document.getElementById(\'sup-msg\').value=\''+qn+'\'" style="background:var(--c1);border:1px solid var(--b2);color:var(--sub);border-radius:7px;padding:5px 9px;font-size:11px;cursor:pointer;font-family:var(--m)">→ '+qn+'</button>').join('')+'</div><button class="btn bsky-btn full bmd" id="sup-btn" onclick="runSup()">💬 Generate Reply</button></div><div id="sup-res"></div><div class="sec"><div class="st">📚 Template Library</div><div class="ss">8 ready-made templates for common situations</div><button class="btn bsky-btn full bmd" id="tmpl-btn" onclick="runTmpls()">📚 Generate 8 Templates</button><div id="tmpl-res"></div></div>';
+}
+async function runSup(){var msg=document.getElementById('sup-msg').value;if(!msg.trim()){alert('Enter a customer message.');return;}var btn=document.getElementById('sup-btn'),res=document.getElementById('sup-res');btn.innerHTML='<span class="spw sp"></span> Writing...';btn.disabled=true;res.innerHTML=ldHTML('Writing reply...');try{var r=await ai(SYS()+'\n\nWrite customer support replies. Never mention AI. Max 130 words. Sign off as "The '+S.shop.name+' Team". Follow Printify policies.','Customer: "'+msg+'"\n\n💌 MAIN REPLY (friendly, ready to send):\n\n🔄 ALTERNATIVE (more empathetic):\n\n📋 INTERNAL ACTION NEEDED:');res.innerHTML=rHTML(r,'REPLY READY','var(--sky)');}catch(e){res.innerHTML=rHTML('Error: '+e.message,'ERROR','var(--rose)');}btn.innerHTML='💬 Generate Reply';btn.disabled=false;}
+async function runTmpls(){var btn=document.getElementById('tmpl-btn'),res=document.getElementById('tmpl-res');btn.innerHTML='<span class="spw sp"></span> Building...';btn.disabled=true;res.innerHTML=ldHTML('Writing 8 templates...');try{var r=await ai(SYS(),'Write 8 support templates for cat apparel Printify store "'+S.shop.name+'":\n1. Order tracking\n2. Shipping delay\n3. Wrong item (Printify)\n4. Damaged item (Printify replacement)\n5. Return request\n6. Sizing question\n7. Refund status\n8. International shipping\n\nFor each:\n📧 TEMPLATE [N]: [Situation]\n[Complete reply]\n---');res.innerHTML=rHTML(r,'8 TEMPLATES READY','var(--sky)');}catch(e){res.innerHTML=rHTML('Error','ERROR','var(--rose)');}btn.innerHTML='🔄 Regenerate';btn.disabled=false;}
+
+function buildAds(){buildTool('ads',{title:'📣 Ad Copy Generator',sub:'Facebook, Instagram, TikTok, Google, Retargeting — cat lovers',col:'var(--violet)',cls:'cviolet',bl:'📣 Generate Ads',rl:'ADS READY',modes:[{id:'fb',label:'Facebook'},{id:'ig',label:'Instagram'},{id:'tt',label:'TikTok'},{id:'gg',label:'Google'},{id:'rt',label:'Retargeting'},{id:'ugc',label:'UGC Scripts'}],inputs:[{id:'prod',lbl:'Product to promote',ph:'e.g. Grumpy Cat Hoodie',multi:false},{id:'offer',lbl:'Offer (optional)',ph:'e.g. 20% off, free shipping',multi:false}],prompts:{fb:(inp,tp,n)=>'3 Facebook ad sets for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'. Offer: '+(inp.offer||'none')+'.\n\n📣 AD 1 — AWARENESS\nPrimary (125 chars):\nHeadline (40 chars):\nCTA:\nCreative direction:\n\n📣 AD 2 — CONSIDERATION\nPrimary:\nHeadline:\nCTA:\n\n📣 AD 3 — CONVERSION (urgency)\nPrimary:\nHeadline:\nCTA:\n\n🎯 AUDIENCE:\n💰 BUDGET RECOMMENDATION:',ig:(inp,tp,n)=>'3 Instagram ads for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'.\n📸 FEED AD: Caption+Hashtags(20)+CTA+Visual\n🎬 REEL SCRIPT (30 secs): Hook+Script+CTA+Music\n📱 STORY (3 slides):',tt:(inp,tp,n)=>'3 TikTok scripts for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'.\n🎬 SCRIPT 1 (trending): Hook+Script+CTA+Music\n🎬 SCRIPT 2 (emotional): Hook+Script+CTA\n🎬 SCRIPT 3 (unboxing): Hook+Script+CTA\n📊 20 HASHTAGS:',gg:(inp,tp,n)=>'Google ads for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'.\n🔍 AD 1: H1(30)+H2(30)+H3(30)+D1(90)+D2(90)\n🔍 AD 2:\n🛒 SHOPPING TITLE (70 chars):\n🎯 20 KEYWORDS:\n❌ 10 NEGATIVE KEYWORDS:',rt:(inp,tp,n)=>'Retargeting ads for "'+n+'".\nFACEBOOK: 72hr+7-day+cart abandon text+headline each\nINSTAGRAM STORY RETARGET (3 slides):\nEMAIL RETARGET: Subject+body\nSTRATEGY: segments+escalation+frequency',ugc:(inp,tp,n)=>'UGC scripts for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'.\n🎬 UGC 1 (testimonial, 30 secs):\n🎬 UGC 2 (gifting angle):\n🎬 UGC 3 (unboxing):\nCREATOR BRIEF: hooks+messages+CTA'}});}
+
+function buildEmail(){buildTool('email',{title:'📧 Email Marketing Suite',sub:'Welcome, launches, sales, win-back, reviews, VIP, holiday',col:'var(--rose)',cls:'crose',bl:'📧 Generate Email Campaign',rl:'EMAILS READY',modes:[{id:'welcome',label:'Welcome'},{id:'launch',label:'New Product'},{id:'sale',label:'Sale'},{id:'winback',label:'Win-Back'},{id:'review',label:'Reviews'},{id:'loyalty',label:'VIP'},{id:'holiday',label:'Holiday'}],inputs:[{id:'prod',lbl:'Product / Offer (optional)',ph:'e.g. New Black Cat Hoodie, 25% off hoodies...',multi:false}],prompts:{welcome:(inp,tp,n)=>'3-email welcome series for "'+n+'". Products: '+tp+'.\nEmail 1 instant: brand story+10% off — 5 subjects+preview+body+CTA\nEmail 2 day 3: best sellers\nEmail 3 day 7: social proof+urgency',launch:(inp,tp,n)=>'Launch email for "'+n+'". Product: '+(inp.prod||tp.split(',')[0])+'.\n5 subject lines+preview text+full launch email+CTA+P.S.',sale:(inp,tp,n)=>'3-email sale for "'+n+'". Sale: '+(inp.prod||'20% off')+'.\nEmail 1 launch+Email 2 mid-sale+Email 3 last day\nCountdown language, scarcity, strong CTAs',winback:(inp,tp,n)=>'Win-back for "'+n+'" (inactive 30-60 days).\nEmail 1 (30d): we miss you\nEmail 2 (45d): special offer\nEmail 3 (60d): last chance',review:(inp,tp,n)=>'Review campaign for "'+n+'".\nEmail 1 (14 days after delivery)\nEmail 2 followup (day 21)\nThank you email\n5 positive review responses\n3 negative review responses',loyalty:(inp,tp,n)=>'VIP loyalty for "'+n+'".\nVIP welcome+Early access+Birthday+Referral+Anniversary',holiday:(inp,tp,n)=>'Holiday campaign for "'+n+'". Products: '+tp+'.\nChristmas+Last order date+New Year+Valentine\'s+Mother\'s Day'}});}
+
+function buildSocial(){buildTool('social',{title:'📱 Social Media Creator',sub:'Instagram, Facebook, TikTok, Pinterest + 30-day calendar',col:'var(--sky)',cls:'csky',bl:'📱 Generate Social Content',rl:'SOCIAL READY',modes:[{id:'ig',label:'Instagram'},{id:'fb',label:'Facebook'},{id:'tt',label:'TikTok'},{id:'pin',label:'Pinterest'},{id:'cal',label:'30-Day Plan'},{id:'hash',label:'Hashtags'}],inputs:[{id:'topic',lbl:'Product or Topic',ph:'e.g. New Cat Hoodie Drop, cat mom gift ideas...',multi:false}],prompts:{ig:(inp,tp,n)=>'5 Instagram posts for "'+n+'". Topic: '+(inp.topic||tp.split(',')[0])+'. Products: '+tp+'.\nFor EACH: TYPE+CAPTION(full emojis)+VISUAL+30 HASHTAGS+BEST TIME+ENGAGEMENT QUESTION\nBonus: 5 REEL HOOKS+TRENDING AUDIO',fb:(inp,tp,n)=>'5 Facebook posts for "'+n+'". Topic: '+(inp.topic||tp.split(',')[0])+'.\nFor EACH: TYPE+FULL TEXT+IMAGE DESC+CTA+BOOST?',tt:(inp,tp,n)=>'5 TikTok videos for "'+n+'". Topic: '+(inp.topic||tp.split(',')[0])+'.\nFor each: CONCEPT+HOOK(2 secs)+FULL SCRIPT+MUSIC+20 HASHTAGS',pin:(inp,tp,n)=>'Pinterest strategy for "'+n+'". Topic: '+(inp.topic||'cat apparel')+'.\n5 PIN IDEAS(title+desc+board+alt)\n10 BOARD NAMES+descriptions\nKeyword strategy+Shopping setup',cal:(inp,tp,n)=>'30-day social calendar for "'+n+'". Products: '+tp+'.\nFor each WEEK: theme+Mon-Sun posts\nCONTENT MIX RATIO+GOALS',hash:(inp,tp,n)=>'Hashtag strategy for "'+n+'". Topic: '+(inp.topic||'cat apparel')+'.\nMEGA(1M+,5)+LARGE(500K-1M,8)+MEDIUM(100K-500K,10)+NICHE(10K-100K,10)+MICRO(under 10K,7)\nROTATION STRATEGY+BANNED+BRANDED HASHTAG'}});}
+
+function buildInsights(){
+  var aud=S.products.map(auditP);
+  var avg=Math.round(aud.reduce((s,a)=>s+a.score,0)/(aud.length||1));
+  var crit=S.products.filter((_,i)=>aud[i].issues.some(x=>x.sev==='critical')).length;
+  document.getElementById('tp-insights').innerHTML='<div class="sec" style="text-align:center;padding:24px"><div style="font-size:44px;margin-bottom:12px">🤖</div><div style="font-size:17px;font-weight:800;margin-bottom:6px">Full Store Intelligence Report</div><div style="color:var(--sub);font-size:13px;margin-bottom:18px;font-family:var(--m)">'+S.products.length+' products · '+S.collections.length+' collections · Score '+avg+'/100 · '+crit+' critical</div><button class="btn bg full bmd" id="ins-btn" onclick="runInsights('+avg+','+crit+')">⚡ Generate Full Store Report</button></div><div id="ins-res"></div><div class="sec"><div style="color:var(--gold);font-weight:800;font-size:14px;margin-bottom:12px">💰 Quick Wins Right Now</div>'+[['Add compare-at prices to all products','Sale badge = instant conversion boost','var(--gold)'],['Fix '+crit+' critical SEO issues','More Google traffic = free customers','var(--rose)'],['Add ALT text to all product images','Better Google ranking for free','var(--sky)'],['Create collections per cat breed/theme','Better navigation = higher conversion','var(--g)'],['Add email popup with 10% off','Every email = potential repeat buyer','var(--violet)'],['Enable product reviews in Shopify','Social proof = more trust = more sales','var(--orange)']].map(x=>'<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--b2)"><span style="width:8px;height:8px;border-radius:50%;background:'+x[2]+';display:inline-block;flex-shrink:0;margin-top:5px"></span><div><div style="font-size:13px;font-weight:600">'+x[0]+'</div><div style="color:var(--dim);font-size:11px;font-family:var(--m)">'+x[1]+'</div></div></div>').join('')+'</div>';
+}
+async function runInsights(avg,crit){
+  var btn=document.getElementById('ins-btn'),res=document.getElementById('ins-res');
+  btn.innerHTML='<span class="spw sp"></span> Analyzing...';btn.disabled=true;res.innerHTML=ldHTML('Analyzing your entire store...');
+  var tp=S.products.slice(0,8).map(p=>{var pr=p.priceRange?.minVariantPrice;return '• '+p.title+(pr?' ('+pr.currencyCode+' '+pr.amount+')':'');}).join('\n');
+  try{var r=await ai(SYS(),'Complete store report for "'+S.shop.name+'":\nProducts: '+S.products.length+', Collections: '+S.collections.length+', Avg SEO: '+avg+'/100, Critical: '+crit+'\nTop products:\n'+tp+'\n\n## 🏆 STORE HEALTH SCORE + SUMMARY\n## 🔴 TOP 5 CRITICAL FIXES TODAY\n## 💰 REVENUE OPPORTUNITIES (3 tactics + impact)\n## 📈 SEO GROWTH PLAN (30-60-90 days)\n## 🛒 CONVERSION OPTIMIZATION\n## 🖨️ PRINTIFY TIPS (new products, pricing)\n## 📅 90-DAY ACTION PLAN\n## 🚀 BIGGEST UNTAPPED OPPORTUNITY');res.innerHTML=rHTML(r,'STORE REPORT READY','var(--g)');}catch(e){res.innerHTML=rHTML('Error: '+e.message,'ERROR','var(--rose)');}
+  btn.innerHTML='🔄 Re-analyze';btn.disabled=false;
+}
+
+function buildPricing(){buildTool('pricing',{title:'💲 Pricing Strategy AI',sub:'Optimize prices, margins, bundles, discounts for max profit',col:'var(--orange)',cls:'cgold',bl:'💲 Analyze Pricing',rl:'PRICING ANALYSIS',modes:[{id:'strategy',label:'Full Strategy'},{id:'bundles',label:'Bundle Ideas'},{id:'sale',label:'Sale Planning'},{id:'margin',label:'Margin Tips'}],inputs:[{id:'info',lbl:'Current prices (optional)',ph:'e.g. Hoodies $45, T-shirts $28, Pillows $35',multi:false}],prompts:{strategy:(inp,tp,n)=>'Pricing strategy for Printify cat apparel store "'+n+'". Products: '+tp+'. Current: '+(inp.info||'not provided')+'.\n📊 PRICE POSITIONING:\n💰 RECOMMENDED PRICES per product:\n🧮 PROFIT MARGIN TARGETS:\n🎯 PSYCHOLOGICAL PRICING:\n🆓 FREE SHIPPING THRESHOLD:\n📈 PRICE INCREASE STRATEGY:',bundles:(inp,tp,n)=>'Bundle strategy for "'+n+'". Products: '+tp+'.\n5 BUNDLE IDEAS (name+products+price+savings+conversion boost)\nBUNDLE DISPLAY in Shopify:\nBUNDLE EMAIL:\nBUNDLE AD COPY:',sale:(inp,tp,n)=>'Sale strategy for "'+n+'".\nBEST SALE DATES:\nDISCOUNT STRUCTURE (with Printify margins):\nWHICH PRODUCTS TO DISCOUNT:\nFLASH SALE STRATEGY:\nSALE EMAIL SEQUENCE:',margin:(inp,tp,n)=>'Maximize Printify margins for "'+n+'". Info: '+(inp.info||'not provided')+'.\nPRINTIFY COST REDUCTION TIPS:\nOPTIMAL PRICING PER PRODUCT:\nHIGHEST MARGIN PRODUCTS:\nSHIPPING COST OPTIMIZATION:\nPATH TO HIGHER PROFIT (3 steps):'}});}
+
+function buildSettings(){
+  document.getElementById('tp-settings').innerHTML='<div class="sec" style="background:var(--gd);border-color:var(--gm)"><div style="color:var(--g);font-weight:800;font-size:15px;margin-bottom:10px">✅ Connected Store</div><div style="color:var(--sub);font-size:12px;line-height:1.9;font-family:var(--m)"><b style="color:var(--tx)">'+_e(S.shop.name)+'</b><br>'+(S.shop.primaryDomain?.url||S.store)+'<br>'+S.products.length+' products · '+S.collections.length+' collections · '+(S.shop.currencyCode||'USD')+'</div><div style="margin-top:12px"><button class="btn bo bored bsm" onclick="doReset()">Disconnect Store</button></div></div><div class="sec"><div style="color:var(--sky);font-weight:800;font-size:14px;margin-bottom:10px">🔑 Update Keys</div><span class="slbl">New Gemini AI Key</span><input id="set-ai" type="password" placeholder="AIzaSy..." style="margin-bottom:10px"><span class="slbl">New Shopify Token</span><input id="set-tok" type="password" placeholder="shpat_..." style="margin-bottom:13px"><button class="btn bsky-btn bmd" onclick="updateKeys()">💾 Save Keys</button></div><div class="sec"><div style="color:var(--gold);font-weight:800;font-size:14px;margin-bottom:10px">📋 How to Apply AI Fixes</div><div style="color:var(--sub);font-size:12px;line-height:1.95;font-family:var(--m)"><b style="color:var(--tx)">1.</b> Shopify Admin → Products<br><b style="color:var(--tx)">2.</b> Find product → tap Edit<br><b style="color:var(--tx)">3.</b> Paste AI content into each field<br><b style="color:var(--tx)">4.</b> SEO: scroll to "Search engine listing" at bottom<br><b style="color:var(--tx)">5.</b> ALT text: click each image → Edit alt text<br><b style="color:var(--tx)">6.</b> Tap Save ✅</div></div>';
+}
+function updateKeys(){var ai=document.getElementById('set-ai').value.trim(),tk=document.getElementById('set-tok').value.trim();if(ai)S.aiKey=ai;if(tk)S.tok=tk;saveKeys();alert('✅ Keys updated and saved!');}
+
+// ══════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════
+function goTab(tab,btn){document.querySelectorAll('.tp').forEach(p=>p.className='tp');document.getElementById('tp-'+tab).className='tp on';document.querySelectorAll('.tbtn').forEach(b=>b.className='tbtn');if(btn)btn.className='tbtn on';S.tab=tab;}
+function goNav(tab,btn){goTab(tab,null);document.querySelectorAll('.tbtn').forEach(b=>{var t=b.textContent.toLowerCase();var m=tab==='audit'?t.includes('audit'):tab==='content'?t.includes('content'):tab==='support'?t.includes('support'):tab==='ads'?t.includes('ads'):tab==='insights'?t.includes('insights'):false;if(m)b.className='tbtn on';});document.querySelectorAll('.nb').forEach(b=>{var on=b===btn;b.className='nb'+(on?' on':'');var d=b.querySelector('.nbd');if(on&&!d){var nd=document.createElement('span');nd.className='nbd';b.appendChild(nd);}else if(!on&&d){d.remove();}});}
+
+window.addEventListener('DOMContentLoaded',loadKeys);
+</script>
+</body>
+</html>
